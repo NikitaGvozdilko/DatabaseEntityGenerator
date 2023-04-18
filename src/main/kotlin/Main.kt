@@ -10,7 +10,7 @@ const val ROOT_PATH =
 fun main(args: Array<String>) {
     val rootFile = File(System.getProperty("user.dir"))
 //    val rootFile = File(ROOT_PATH)
-    val packagePath = ROOT_PATH.subSequence(ROOT_PATH.indexOf("java/") + 5, ROOT_PATH.length).replace(Regex("/"), ".")
+    val packagePath = getPackage(rootFile)
 
     println("Enter entity name: ")
     val enteredEntityName = readln()
@@ -85,6 +85,17 @@ fun main(args: Array<String>) {
         rootFile = rootFile,
         usecaseWriter = usecaseWriter
     )
+}
+
+private fun getPackage(rootFile: File): String {
+    val startRange = if (rootFile.path.contains("java")) {
+        rootFile.path.indexOf("java" + File.separator) + 5
+    } else {
+        rootFile.path.indexOf("kotlin" + File.separator) + 7
+    }
+    val packagePath = rootFile.path.subSequence(startRange, rootFile.path.length)
+        .replace(Regex(File.separator), ".")
+    return packagePath
 }
 
 
